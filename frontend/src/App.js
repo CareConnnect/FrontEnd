@@ -16,19 +16,19 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        {/* <ContextProvider> */}
-        <ScrollToTop>
-          <Routes>
-            {/* Main */}
-            <Route path="/" element={<Main />} />
-            <Route path="/login/:type" element={<Login />} />
-            <Route path="/join" element={<Join />} />
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="*" element={<Main />} />
-          </Routes>
-          {/* <Footer /> */}
-        </ScrollToTop>
-        {/* </ContextProvider> */}
+        <ContextProvider>
+          <ScrollToTop>
+            <Routes>
+              {/* Main */}
+              <Route path="/" element={<Main />} />
+              <Route path="/login/:type" element={<Login />} />
+              <Route path="/join" element={<Join />} />
+              <Route path="/mypage" element={<MyPage />} />
+              <Route path="*" element={<Main />} />
+            </Routes>
+            {/* <Footer /> */}
+          </ScrollToTop>
+        </ContextProvider>
       </BrowserRouter>
     </div>
   );

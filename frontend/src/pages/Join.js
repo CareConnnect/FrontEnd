@@ -1,104 +1,264 @@
-import React from 'react';
-import Header from '../components/Header';
+import React, { useState, useEffect } from 'react';
+import DaumPostcode from 'react-daum-postcode';
 
+import Header from '../components/Header';
 import trashIcon from '../assets/img/trashIcon.svg';
+import Button from '../components/Button';
 
 function Join() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [detailedAddress, setDetailedAddress] = useState('');
+
+  const [userInfo, setUserInfo] = useState({
+    userPhoneId: '',
+    password: '',
+    confirmPassword: '',
+    userName: '', //name
+    email: '',
+    address: '',
+    profilePhote: '',
+    nickname: '',
+    selfIntroduction: '',
+    familyPhoneNubmer: [{ name: '', phoneId: '' }], //가족 추가
+  });
+
+  const themeObj = {
+    bgColor: '#ffffff',
+    pageBgColor: '#ffffff',
+    postcodeTextColor: '#C05850',
+    emphTextColor: '#222222',
+  };
+
+  const onHandleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserInfo({ ...userInfo, [name]: value });
+  };
+
+  //주소 검색
+  const completeHandler = (data) => {
+    const { address, zonecode } = data;
+
+    setUserInfo({ ...userInfo, address: address });
+  };
+
+  const closeHandler = (state) => {
+    if (state === 'FORCE_CLOSE') {
+      setIsOpen(false);
+    } else if (state === 'COMPLETE_CLOSE') {
+      setIsOpen(false);
+    }
+  };
+
+  const toggleHandler = () => {
+    setIsOpen((prevOpenState) => !prevOpenState);
+  };
+
+  const inputChangeHandler = (event) => {
+    setDetailedAddress(event.target.value);
+  };
+
+  //파일선택
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setUserInfo({ ...userInfo, profilePhote: reader.result });
+      console.log('reader', file);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div style={styles.wrap}>
       <Header />
       <div style={styles.innerWrap}>
-        <h1>회원가입</h1>
+        <h1 style={styles.titleText}>회원가입</h1>
         <div>
           <label>
-            이름(필수)
-            <input type="text" placeholder="이름입력" />
+            <div style={{ ...styles.labelTextStyle, color: '#FF3535' }}>
+              이름(필수)
+            </div>
+            <input
+              style={styles.inputStyle}
+              type="text"
+              placeholder="이름 입력"
+              name="userName"
+              onChange={onHandleInputChange}
+              value={userInfo.userName}
+            />
           </label>
         </div>
         <div>
-          <div>
-            <label>
+          <label>
+            <div style={{ ...styles.labelTextStyle, color: '#FF3535' }}>
               전화번호(필수)
+            </div>
+            <div style={{ display: 'flex' }}>
               <input
+                style={styles.inputStyle}
                 type="text"
-                placeholder="휴대전화 번호(숫자 11자리만 입력해 주세요)"
+                placeholder="숫자 11자리 입력"
               />
-              <button>인증번호 요청</button>
-            </label>
-          </div>
-          <input type="text" placeholder="인증번호를 입력해 주세요" />
+              {/* <button style={styles.formButton}>인증번호 요청</button> */}
+            </div>
+          </label>
         </div>
+        {/* <input
+          style={styles.inputStyle}
+          type="text"
+          placeholder="인증번호 입력"
+          disabled
+        /> */}
         <div>
           <label>
-            비밀번호(필수)
-            <input type="password" placeholder="비밀번호 입력" />
-            <input type="password" placeholder="비밀번호 재입력" />
+            <div style={{ ...styles.labelTextStyle, color: '#FF3535' }}>
+              비밀번호(필수)
+            </div>
+            <input
+              style={styles.inputStyle}
+              type="password"
+              placeholder="비밀번호 입력"
+            />
+            <input
+              style={styles.inputStyle}
+              type="password"
+              placeholder="비밀번호 재입력"
+            />
           </label>
         </div>
         <div>
-          <div>
-            <label>
+          <label>
+            <div style={{ ...styles.labelTextStyle, color: '#FF3535' }}>
               주소(필수)
-              <input type="text" placeholder="예) 연희동 132, 도산대로 33" />
-              <button>검색</button>
-            </label>
-          </div>
-          <input type="text" placeholder="상세 주소 입력" />
+            </div>
+            <div style={{ display: 'flex' }}>
+              <input
+                style={styles.inputFlexStyle}
+                type="text"
+                disabled
+                value={userInfo?.address}
+              />
+              <button style={styles.formButton} onClick={toggleHandler}>
+                검색
+              </button>
+            </div>
+          </label>
         </div>
-        <div>
+        {isOpen && (
           <div>
-            <label>
-              닉네임(선택)
-              <input type="text" placeholder="닉네임 입력" />
-              <button>중복 확인</button>
-            </label>
+            <DaumPostcode
+              theme={themeObj}
+              style={styles.postCodeStyle}
+              onComplete={completeHandler}
+              onClose={closeHandler}
+            />
           </div>
-        </div>
+        )}
+        <input
+          style={styles.inputStyle}
+          type="text"
+          placeholder="상세 주소 입력"
+          value={detailedAddress}
+          onChange={inputChangeHandler}
+        />
         <div>
-          <div>
-            <label>
-              프로필(선택)
-              <input type="text" />
-              <button>파일 선택</button>
-            </label>
-          </div>
+          <label>
+            <div style={styles.labelTextStyle}>닉네임(선택)</div>
+            <div style={{ display: 'flex' }}>
+              <input
+                style={styles.inputStyle}
+                type="text"
+                placeholder="닉네임 입력"
+                name="nickname"
+                onChange={onHandleInputChange}
+              />
+              {/* <button style={styles.formButton}>중복 확인</button> */}
+            </div>
+          </label>
         </div>
         <div>
           <label>
-            자기소개(선택)
-            <input type="text" />
+            <div style={styles.labelTextStyle}>프로필(선택)</div>
+            <div style={{ display: 'flex' }}>
+              <input
+                accept="image/*"
+                type="file"
+                style={{
+                  ...styles.formButton,
+                  padding: 0,
+                  overflow: 'hidden',
+                  border: 0,
+                  height: 'auto',
+                  marginBottom: '10px',
+                }}
+                placeholder="파일 선택"
+                onClick={handleImageUpload}
+              />
+            </div>
           </label>
-          <span>0/50</span>
+        </div>
+        <div>
+          <label>
+            <div style={styles.labelTextStyle}>자기소개(선택)</div>
+            <textarea
+              style={{
+                ...styles.inputStyle,
+                height: '100px',
+                resize: 'none',
+                overflow: 'hidden',
+              }}
+              name="selfIntroduction"
+              type="text"
+              onChange={onHandleInputChange}
+            />
+          </label>
+          <div
+            style={{
+              width: '291px',
+              fontSize: '10px',
+              marginTop: '-10px',
+              textAlign: 'right',
+            }}
+          >
+            <span>{}/50</span>
+          </div>
         </div>
         <div>
           <div>
             <div>
               <label>
-                가족 전화번호(필수)
+                <div style={{ ...styles.labelTextStyle, color: '#FF3535' }}>
+                  가족 전화번호(필수)
+                </div>
                 <input
+                  style={styles.inputStyle}
                   type="text"
-                  placeholder="휴대전화 번호(숫자 11자리만 입력해 주세요)"
+                  placeholder="숫자 11자리 입력"
                 />
-                <button>인증번호 요청</button>
               </label>
-            </div>
-            <input type="text" placeholder="인증번호를 입력해 주세요" />
-          </div>
-          {/* 추가 연락처 */}
-          <div>
-            <div>
-              <input
-                type="text"
-                placeholder="휴대전화 번호(숫자 11자리만 입력해 주세요)"
+              <img
+                src={trashIcon}
+                alt="trash icon"
+                width="15px"
+                style={{ cursor: 'pointer' }}
               />
-              <button>인증번호 요청</button>
             </div>
-            <input type="text" placeholder="인증번호를 입력해 주세요" />
-            <img src={trashIcon} alt="trash icon" width="20px" />
           </div>
-          <button>가족 추가</button>
+          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+            <button style={{ ...styles.formButton }}>가족 추가</button>
+          </div>
         </div>
       </div>
+      <Button
+        backgroundColor="#FF7B7B"
+        color="#ffffff"
+        text="회원가입 완료"
+        size="small"
+      />
     </div>
   );
 }
@@ -108,7 +268,8 @@ const styles = {
     maxWidth: '375px',
     width: '100%',
     minHeight: '667px',
-    backgroundColor: 'skyblue',
+    borderLeft: '1px solid #f4f4f4',
+    borderRight: '1px solid #f4f4f4',
     display: 'flex',
     alignItems: 'center',
     display: 'flex',
@@ -116,11 +277,46 @@ const styles = {
   },
   innerWrap: {
     display: 'flex',
-    width: '228px',
+    width: '300px',
     justifyContent: 'center',
-    alignItems: 'center',
     flexDirection: 'column',
     gap: '10px',
+    textAlign: 'left',
+  },
+  titleText: {
+    fontSize: '32px',
+    fontWeight: 'bold',
+    marginTop: '30px',
+    marginBottom: '30px',
+  },
+  labelTextStyle: { marginBottom: '10px', fontSize: '14px' },
+  inputStyle: {
+    width: '100%',
+    height: '31px',
+    paddingLeft: '5px',
+    border: '1px solid #D9D9D9',
+    fontSize: '14px',
+    marginBottom: '10px',
+  },
+  inputFlexStyle: {
+    height: '31px',
+    paddingLeft: '5px',
+    border: '1px solid #D9D9D9',
+    fontSize: '14px',
+    marginRight: '10px',
+    flex: 1,
+  },
+  inputButtonWrap: { display: 'flex' },
+  formButton: {
+    height: '31px',
+    border: 'none',
+    backgroundColor: '#707070',
+    color: '#ffffff',
+    cursor: 'pointer',
+  },
+  postCodeStyle: {
+    width: '100%',
+    height: '480px',
   },
 };
 

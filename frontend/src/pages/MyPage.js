@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../components/Header';
 
 import sampleProfile from '../assets/img/sampleProfile.png';
+import Button from '../components/Button';
 
 function MyPage() {
   return (
@@ -49,8 +50,18 @@ function MyPage() {
           </div>
         </dl>
       </div>
-      <button style={styles.editUser}>회원정보 수정</button>
-      <button style={styles.deleteUser}>회원 탈퇴</button>
+      <Button
+        backgroundColor="#707070"
+        color="#ffffff"
+        text="회원정보 수정"
+        size="small"
+      />
+      <Button
+        backgroundColor="#FF7B7B"
+        color="#ffffff"
+        text="회원 탈퇴"
+        size="small"
+      />
     </div>
   );
 }
@@ -108,23 +119,6 @@ const styles = {
     fontSize: '14px',
     marginBottom: '10px',
     textAlign: 'left',
-  },
-  editUser: {
-    width: '131px',
-    height: '35px',
-    marginBottom: '20px',
-    borderRadius: '5px',
-    border: 'none',
-    backgroundColor: '#707070',
-    color: '#fff',
-  },
-  deleteUser: {
-    width: '131px',
-    height: '35px',
-    borderRadius: '5px',
-    border: 'none',
-    backgroundColor: '#FF7B7B',
-    color: '#fff',
   },
 };
 

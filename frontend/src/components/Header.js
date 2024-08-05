@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import introLogo from '../assets/img/introLogo.png';
 import userIcon from '../assets/img/userIcon.svg';
@@ -7,7 +8,9 @@ import { display } from '@mui/system';
 function Header({ auth = true }) {
   return (
     <div style={styles.headerStyle}>
-      <img style={styles.logoStyle} src={introLogo} alt="intro logo" />
+      <Link to="/">
+        <img style={styles.logoStyle} src={introLogo} alt="intro logo" />
+      </Link>
       {auth && (
         <div>
           <img src={userIcon} alt="user icon" width="23" height="23" />

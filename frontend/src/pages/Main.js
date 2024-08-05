@@ -1,20 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import introLogo from '../assets/img/introLogo.png';
 import mainLogo from '../assets/img/mainLogo.png';
 
 import LoadingBar from '../components/LoadingBar';
-import MainButton from '../components/MainButton';
+import Button from '../components/Button';
 import Login from './Login';
+import { UseContext } from '../provider/useContext';
 
 function Main() {
+  const context = useContext(UseContext);
+  const { userMode, setUserMode } = context;
+  console.log('context', context);
   const [mode, setMode] = useState('intro');
+
+  useEffect(() => {
+    console.log('userMode:', userMode);
+  }, [userMode]);
 
   useEffect(() => {
     const modeTimer = setTimeout(() => {
       setMode('main');
     }, 3000);
+
+    setUserMode('');
 
     return () => {
       clearTimeout(modeTimer);
@@ -42,10 +52,20 @@ function Main() {
         </h3>
         <div style={styles.buttonContainer}>
           <Link to="/login/elderly">
-            <MainButton color="#32D0A1" text="어르신 로그인" />
+            <Button
+              backgroundColor="#32D0A1"
+              color="#fff"
+              text="어르신 로그인"
+              mode="elderly"
+            />
           </Link>
           <Link to="/login/family">
-            <MainButton color="#FF7B7B" text="가족 로그인" />
+            <Button
+              backgroundColor="#FF7B7B"
+              color="#fff"
+              text="가족 로그인"
+              mode="family"
+            />
           </Link>
         </div>
       </div>

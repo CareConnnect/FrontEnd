@@ -1,14 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import mainLogo from '../assets/img/mainLogo.png';
 import { handleChangeInput } from '../utils/uilts';
+import { UseContext } from '../provider/useContext';
 
 function Login() {
   const navigate = useNavigate();
   const { type } = useParams();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
+  const context = useContext(UseContext);
+  const { userMode, setUserMode } = context;
+
+  useEffect(() => {
+    console.log('userMode:', userMode);
+  }, [userMode]);
 
   const handleChangeInput = (e) => {
     let value = e.target.value;

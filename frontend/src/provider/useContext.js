@@ -1,11 +1,17 @@
 import React, { createContext } from 'react';
 
-const initValue = {};
+const initValue = {
+  userMode: '',
+};
 
 export const UseContext = createContext(initValue);
 
 export function ContextProvider(props) {
-  const contextValue = {};
+  const [userMode, setUserMode] = React.useState('');
+  const contextValue = {
+    userMode,
+    setUserMode,
+  };
 
   return (
     <UseContext.Provider value={contextValue}>
